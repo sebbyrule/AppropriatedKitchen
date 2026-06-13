@@ -8,9 +8,10 @@
     "start": "next start",
     "lint": "eslint",
     "nutrition": "npx tsx scripts/nutrition-calc.ts",
-    "pages:build": "npx @opennextjs/cloudflare build",
-    "pages:deploy": "npx @opennextjs/cloudflare deploy",
-    "pages:preview": "npx @opennextjs/cloudflare preview"
+    "deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
+    "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
+    "upload": "opennextjs-cloudflare build && opennextjs-cloudflare upload",
+    "cf-typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts"
   },
   "dependencies": {
     "@base-ui/react": "^1.5.0",

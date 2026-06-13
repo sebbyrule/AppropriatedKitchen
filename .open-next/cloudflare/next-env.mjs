@@ -1,3 +1,3 @@
-export const production = {};
-export const development = {};
+export const production = {"NEXT_PUBLIC_SITE_URL":"https://appropriatedkitchen.com"};
+export const development = {"NEXT_PUBLIC_SITE_URL":"https://appropriatedkitchen.com"};
 export const test = {};
