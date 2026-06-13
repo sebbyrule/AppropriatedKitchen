@@ -236,20 +236,29 @@ Body written in plain Markdown.
 
 ---
 
-## 8. Nutrition API Workflow
+## 8. Nutrition System
 
-1. Sign up at [Edamam Nutrition Analysis API](https://developer.edamam.com/edamam-nutrition-api)
-2. Get `app_id` and `app_key`
-3. Add to `.env.local`:
-   ```
-   EDAMAM_APP_ID=your_id
-   EDAMAM_APP_KEY=your_key
-   ```
-4. Run the CLI tool to fetch nutrition data for a recipe:
-   ```bash
-   npx tsx scripts/nutrition-fetch.ts "2 cups flour, 1 tbsp sugar, 3 eggs"
-   ```
-5. Copy the output YAML into the recipe's frontmatter `nutrition:` field
+### Local Ingredient Database (Free, No API)
+
+We use a **local nutrition calculator** — no API keys needed. A database of 150+ common ingredients with per-100g nutritional values.
+
+### CLI Tool
+```bash
+npx tsx scripts/nutrition-calc.ts --servings 4 "2 cups flour, 1 tbsp sugar, 3 eggs"
+```
+
+Outputs YAML-ready frontmatter. Copy-paste into recipe `nutrition:` field.
+
+### Files
+- `src/lib/nutrition-db.ts` — Ingredient database (150+ items)
+- `src/lib/nutrition-calc.ts` — Calculation engine (parses ingredient strings, estimates weights, computes totals)
+- `src/lib/nutrition.ts` — Public API for programmatic use
+- `scripts/nutrition-calc.ts` — CLI tool
+
+### Limitations
+- ~150 common ingredients — exotic items may not be found
+- Volume-to-weight conversions are estimates
+- No micronutrient data (vitamins/minerals)
 
 ---
 

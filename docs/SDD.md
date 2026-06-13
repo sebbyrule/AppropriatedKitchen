@@ -503,48 +503,34 @@ export interface Post extends PostFrontmatter {
 
 ---
 
-## 8. Nutrition API Integration
+## 8. Nutrition System
 
-### Recommended API: Edamam Nutrition Analysis API
+### Strategy: Local Ingredient Database (Free, No API)
 
-**Why Edamam:**
-- Purpose-built for recipe/ingredient nutrition analysis
-- Free tier: 10 requests/min, 5000/month (enough for initial use)
-- Returns detailed breakdown (calories, macros, micros, diet labels)
-- Natural language ingredient parsing
+Instead of a paid third-party API, we built a **local nutrition calculator** with a database of 150+ common cooking ingredients. Each ingredient has per-100g nutritional values (calories, protein, carbs, fat, fiber, sodium) sourced from USDA FoodData Central.
 
-**Integration Strategy:**
+### How It Works
 
-1. **Phase A (Script-based):** Build a CLI script that:
-   - Takes a list of ingredient strings as input
-   - Calls Edamam API
-   - Outputs formatted nutrition frontmatter
-   - User paste into MDX frontmatter
+1. **Ingredient Database** (`src/lib/nutrition-db.ts`) — A TypeScript object mapping ingredient names to their nutritional profiles per 100g, plus density and unit weight data for volume-to-weight conversion.
 
-2. **Phase B (Build-time automated):** Future enhancement
-   - Hook into build process
-   - Auto-fetch nutrition data for new/modified recipes
-   - Cache results to avoid repeated API calls
+2. **Calculation Engine** (`src/lib/nutrition-calc.ts`) — Parses ingredient strings like "2 cups all-purpose flour" or "8 oz fresh mozzarella", estimates weight using standard conversions, looks up nutrition data, and calculates totals and per-serving values.
 
-### API Call Pattern
-```
-POST https://api.edamam.com/api/nutrition-details?app_id={ID}&app_key={KEY}
-{
-  "title": "Recipe Name",
-  "ingr": [
-    "2 cups all-purpose flour",
-    "1 tbsp olive oil",
-    "3 cloves garlic"
-  ]
-}
-```
+3. **CLI Tool** (`scripts/nutrition-calc.ts`) — Command-line interface for generating frontmatter:
+   ```bash
+   npx tsx scripts/nutrition-calc.ts --servings 4 "2 cups flour, 1 tbsp oil, 3 eggs"
+   ```
 
-### Environment Variables
-```bash
-EDAMAM_APP_ID=
-EDAMAM_APP_KEY=
-NEXT_PUBLIC_SITE_URL=https://appropriatedkitchen.com
-```
+### Workflow
+1. Write recipe content with ingredient list
+2. Run the CLI tool with your ingredients
+3. Copy the output YAML into the recipe's `nutrition:` frontmatter field
+4. (Future: auto-calculate during build for new/modified recipes)
+
+### Limitations & Future Improvements
+- Database covers ~150 common ingredients — exotic ingredients may not be found
+- Volume-to-weight conversions are estimates (e.g., "1 cup chopped onion" vs "1 cup diced onion" differ)
+- No micronutrient data (vitamins, minerals)
+- **Future:** Expand database, add build-time auto-calculation, allow user overrides
 
 ---
 
@@ -760,7 +746,7 @@ gh repo create appropriated-kitchen --public --source=. --remote=origin --push
 | Risk | Impact | Likelihood | Mitigation |
 |------|--------|------------|------------|
 | `fs` calls at runtime on Cloudflare Workers | 🔴 Critical | High | Use `generateStaticParams()` for all content routes — `fs` only runs at build time |
-| Nutrition API rate limits | 🟠 Medium | Medium | Use script-based approach (Phase A), cache results, upgrade tier if needed |
+| Nutrition database coverage gaps | 🟡 Low | Medium | Database covers 150+ common ingredients; add entries as needed; CLI warns about unknown ingredients |
 | Next.js 16 + Cloudflare compatibility | 🟠 Medium | Medium | Use `@opennextjs/cloudflare` (not deprecated `next-on-pages`); pin tested versions |
 | MDX complexity for non-devs | 🟡 Low | Medium | Provide recipe/post templates; consider web UI later |
 | Image optimization on Cloudflare | 🟡 Low | Low | Use Cloudflare Image Resizing or manual optimization |
@@ -769,17 +755,19 @@ gh repo create appropriated-kitchen --public --source=. --remote=origin --push
 
 ---
 
-## Appendix A: Edamam Nutrition API Setup
+## Appendix A: Nutrition Calculator Usage
 
-1. Go to [Edamam Nutrition Analysis API](https://developer.edamam.com/edamam-nutrition-api)
-2. Sign up for a free developer account
-3. Get `app_id` and `app_key`
-4. Add to `.env.local`:
-   ```
-   EDAMAM_APP_ID=your_app_id
-   EDAMAM_APP_KEY=your_app_key
-   ```
-5. Use the CLI script at `scripts/nutrition-fetch.ts` (to be built in Phase 1)
+```bash
+# Calculate nutrition for a recipe (4 servings)
+npx tsx scripts/nutrition-calc.ts --servings 4 "2 cups flour, 1 tbsp sugar, 3 eggs"
+
+# Calculate without servings flag (defaults to 1)
+npx tsx scripts/nutrition-calc.ts "2 cups flour, 1 tbsp olive oil"
+
+# Copy the output YAML into your recipe's frontmatter nutrition: field
+```
+
+No API keys or accounts needed. The database covers 150+ common cooking ingredients.
 
 ## Appendix B: Key Commands Reference
 
@@ -793,7 +781,7 @@ npm run create-recipe       # CLI wizard (future)
 npm run create-post         # CLI wizard (future)
 
 # Nutrition
-npm run nutrition "2 cups flour, 1 tbsp sugar"  # Fetch nutrition data
+npm run nutrition "2 cups flour, 1 tbsp sugar"  # Calculate nutrition locally
 
 # Build & Deploy
 npm run build               # Standard Next.js build
