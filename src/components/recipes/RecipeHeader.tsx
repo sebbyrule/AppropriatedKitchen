@@ -1,47 +1,55 @@
-import { Clock, ChefHat } from "lucide-react";
+import { DishPlaceholder } from "@/components/shared/DishPlaceholder";
 import { Badge } from "@/components/ui/badge";
 import { PrintButton } from "@/components/recipes/PrintButton";
 import type { Recipe } from "@/types/recipe";
 
 export function RecipeHeader({ recipe }: { recipe: Recipe }) {
+  const meta = [
+    { label: "Prep", value: recipe.prepTime },
+    { label: "Cook", value: recipe.cookTime },
+    { label: "Total", value: recipe.totalTime },
+    { label: "Serves", value: String(recipe.servings) },
+  ];
+
   return (
-    <div className="space-y-6">
-      {/* Hero Image */}
-      <div className="aspect-[2/1] w-full rounded-xl bg-gradient-to-br from-primary/10 to-accent/10 flex items-center justify-center overflow-hidden">
-        <ChefHat className="h-20 w-20 text-muted-foreground/40" />
+    <div className="space-y-8">
+      {/* Title block — editorial, type-led */}
+      <div className="space-y-5">
+        <p className="eyebrow">Recipe</p>
+        <h1 className="font-serif text-4xl font-light leading-[1.05] sm:text-5xl lg:text-6xl">
+          {recipe.title}
+        </h1>
+        <p className="max-w-2xl text-lg leading-relaxed text-muted-foreground">
+          {recipe.excerpt}
+        </p>
+
+        <div className="flex flex-wrap items-center gap-2 pt-1">
+          <Badge>{recipe.difficulty}</Badge>
+          {recipe.tags.map((tag) => (
+            <Badge key={tag} variant="outline">
+              {tag}
+            </Badge>
+          ))}
+        </div>
       </div>
 
-      {/* Title & Meta */}
-      <div className="space-y-4">
-        <h1 className="text-4xl font-bold font-serif sm:text-5xl">{recipe.title}</h1>
-        <p className="text-lg text-muted-foreground">{recipe.excerpt}</p>
+      {/* Hero image */}
+      <DishPlaceholder
+        className="aspect-[2/1] w-full"
+        label={`Appropriated Kitchen`}
+      />
 
-        {/* Meta bar */}
-        <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
-          <div className="flex items-center gap-1.5">
-            <Clock className="h-4 w-4" />
-            <span>Prep: {recipe.prepTime}</span>
-          </div>
-          <span className="text-border">|</span>
-          <span>Cook: {recipe.cookTime}</span>
-          <span className="text-border">|</span>
-          <span>Total: {recipe.totalTime}</span>
-          <span className="text-border">|</span>
-          <span>Serves {recipe.servings}</span>
-        </div>
-
-        {/* Badges + Print */}
-        <div className="flex flex-wrap items-center justify-between gap-4">
-          <div className="flex flex-wrap items-center gap-2">
-            <Badge>{recipe.difficulty}</Badge>
-            {recipe.tags.map((tag) => (
-              <Badge key={tag} variant="secondary">
-                {tag}
-              </Badge>
-            ))}
-          </div>
-          <PrintButton />
-        </div>
+      {/* Stat strip — hairline-divided columns */}
+      <div className="flex items-center justify-between gap-4">
+        <dl className="grid flex-1 grid-cols-2 divide-x divide-border border-y border-border sm:grid-cols-4">
+          {meta.map((m) => (
+            <div key={m.label} className="px-4 py-3 first:pl-0">
+              <dt className="eyebrow">{m.label}</dt>
+              <dd className="mt-1 font-serif text-xl">{m.value}</dd>
+            </div>
+          ))}
+        </dl>
+        <PrintButton />
       </div>
     </div>
   );

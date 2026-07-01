@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { ThemeToggle } from "@/components/shared/ThemeToggle";
 import { MobileNav } from "@/components/layout/MobileNav";
-import { SITE_NAME } from "@/lib/constants";
 
 const navLinks = [
   { href: "/recipes", label: "Recipes" },
@@ -11,24 +10,30 @@ const navLinks = [
 
 export function Header() {
   return (
-    <header className="sticky top-0 z-30 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="sticky top-0 z-30 w-full border-b border-border bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/65">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6 lg:px-8">
-        {/* Logo */}
-        <Link href="/" className="flex items-center gap-2">
-          <span className="text-xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent font-serif">
-            {SITE_NAME}
+        {/* Wordmark */}
+        <Link href="/" className="group flex items-baseline gap-2">
+          <span className="font-serif text-xl tracking-tight text-foreground">
+            Appropriated{" "}
+            <span className="italic text-foreground/90">Kitchen</span>
           </span>
+          <span
+            aria-hidden
+            className="size-1.5 rotate-45 bg-primary transition-transform duration-300 group-hover:rotate-[225deg]"
+          />
         </Link>
 
         {/* Desktop Nav */}
-        <nav className="hidden md:flex items-center gap-8">
+        <nav className="hidden items-center gap-9 md:flex">
           {navLinks.map((link) => (
             <Link
               key={link.href}
               href={link.href}
-              className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+              className="group relative text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground transition-colors hover:text-foreground"
             >
               {link.label}
+              <span className="absolute -bottom-1.5 left-0 h-px w-0 bg-primary transition-all duration-300 group-hover:w-full" />
             </Link>
           ))}
         </nav>

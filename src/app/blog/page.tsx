@@ -12,11 +12,13 @@ export default function BlogPage() {
 
   return (
     <div className="mx-auto max-w-4xl px-4 py-12 sm:px-6 lg:px-8">
-      <div className="mb-10">
-        <h1 className="text-4xl font-bold font-serif sm:text-5xl">Blog</h1>
-        <p className="mt-2 text-lg text-muted-foreground">
+      <div className="mb-12">
+        <p className="eyebrow">Field Notes</p>
+        <h1 className="mt-3 font-serif text-4xl font-light sm:text-6xl">Blog</h1>
+        <p className="mt-3 text-lg text-muted-foreground">
           Thoughts, stories, and behind-the-scenes from the kitchen.
         </p>
+        <div className="mt-6 rule rule-accent" />
       </div>
 
       {posts.length > 0 ? (
@@ -26,10 +28,10 @@ export default function BlogPage() {
           ))}
         </div>
       ) : (
-        <div className="flex flex-col items-center justify-center py-20 text-center">
-          <h2 className="text-2xl font-semibold text-muted-foreground">No posts yet</h2>
+        <div className="flex flex-col items-center justify-center border-y border-border py-24 text-center">
+          <h2 className="font-serif text-2xl font-light">No posts yet</h2>
           <p className="mt-2 text-muted-foreground">
-            Check back soon for new content!
+            Check back soon for new writing.
           </p>
         </div>
       )}

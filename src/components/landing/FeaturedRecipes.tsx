@@ -1,8 +1,6 @@
 import Link from "next/link";
-import { Clock, ChefHat } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardFooter } from "@/components/ui/card";
-import { SITE_NAME } from "@/lib/constants";
+import { Clock } from "lucide-react";
+import { DishPlaceholder } from "@/components/shared/DishPlaceholder";
 import type { Recipe } from "@/types/recipe";
 
 // Inline sample data until the recipes lib is built
@@ -41,64 +39,67 @@ const sampleRecipes: Pick<Recipe, "title" | "slug" | "excerpt" | "prepTime" | "c
 
 export function FeaturedRecipes() {
   return (
-    <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8">
-      <div className="flex items-center justify-between mb-10">
+    <section className="mx-auto max-w-6xl px-4 py-20 sm:px-6 lg:px-8 lg:py-28">
+      {/* Section header */}
+      <div className="flex items-end justify-between gap-6">
         <div>
-          <h2 className="text-3xl font-bold font-serif sm:text-4xl">Featured Recipes</h2>
-          <p className="mt-2 text-muted-foreground">
-            A taste of what {SITE_NAME} has to offer.
-          </p>
+          <p className="eyebrow">The Menu</p>
+          <h2 className="mt-3 font-serif text-4xl font-light sm:text-5xl">
+            Featured Recipes
+          </h2>
         </div>
         <Link
           href="/recipes"
-          className="hidden sm:inline-flex text-sm font-medium text-primary hover:text-primary/80 transition-colors"
+          className="hidden shrink-0 items-center gap-2 pb-2 text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground transition-colors hover:text-primary sm:inline-flex"
         >
-          View all recipes &rarr;
+          View all <span aria-hidden>&rarr;</span>
         </Link>
       </div>
 
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {sampleRecipes.map((recipe) => (
-          <Link key={recipe.slug} href={`/recipes/${recipe.slug}`}>
-            <Card className="group h-full overflow-hidden transition-shadow hover:shadow-lg">
-              {/* Image placeholder */}
-              <div className="aspect-[4/3] bg-gradient-to-br from-primary/10 to-accent/10 flex items-center justify-center">
-                <ChefHat className="h-12 w-12 text-muted-foreground/40" />
+      <div className="mt-5 rule rule-accent" />
+
+      <div className="mt-12 grid gap-x-8 gap-y-14 sm:grid-cols-2 lg:grid-cols-3">
+        {sampleRecipes.map((recipe, i) => (
+          <Link key={recipe.slug} href={`/recipes/${recipe.slug}`} className="group">
+            <article className="flex h-full flex-col">
+              <DishPlaceholder className="aspect-[4/3] w-full" />
+
+              <div className="mt-5 flex items-center gap-3 text-xs uppercase tracking-[0.18em] text-muted-foreground">
+                <span className="font-serif text-sm normal-case tracking-normal text-primary/80">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <span className="inline-flex items-center gap-1.5">
+                  <Clock className="h-3 w-3" />
+                  {recipe.prepTime}
+                </span>
+                <span aria-hidden className="text-border">/</span>
+                <span>{recipe.difficulty}</span>
               </div>
-              <CardContent className="p-5">
-                <div className="flex items-center gap-2 mb-2">
-                  <Clock className="h-4 w-4 text-muted-foreground" />
-                  <span className="text-sm text-muted-foreground">
-                    {recipe.prepTime} prep
-                  </span>
-                </div>
-                <h3 className="text-lg font-semibold group-hover:text-primary transition-colors">
-                  {recipe.title}
-                </h3>
-                <p className="mt-2 text-sm text-muted-foreground line-clamp-2">
-                  {recipe.excerpt}
-                </p>
-              </CardContent>
-              <CardFooter className="px-5 pb-5 pt-0 flex flex-wrap gap-2">
-                <Badge variant="secondary">{recipe.difficulty}</Badge>
-                {recipe.tags.slice(0, 2).map((tag) => (
-                  <Badge key={tag} variant="outline">
-                    {tag}
-                  </Badge>
+
+              <h3 className="mt-3 font-serif text-2xl font-normal leading-snug transition-colors group-hover:text-primary">
+                {recipe.title}
+              </h3>
+              <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-muted-foreground">
+                {recipe.excerpt}
+              </p>
+
+              <div className="mt-4 flex flex-wrap gap-x-3 gap-y-1 text-[0.7rem] uppercase tracking-[0.16em] text-muted-foreground/80">
+                {recipe.tags.slice(0, 3).map((tag) => (
+                  <span key={tag}>{tag}</span>
                 ))}
-              </CardFooter>
-            </Card>
+              </div>
+            </article>
           </Link>
         ))}
       </div>
 
       {/* Mobile "View all" link */}
-      <div className="mt-8 text-center sm:hidden">
+      <div className="mt-12 sm:hidden">
         <Link
           href="/recipes"
-          className="text-sm font-medium text-primary hover:text-primary/80 transition-colors"
+          className="inline-flex items-center gap-2 text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground transition-colors hover:text-primary"
         >
-          View all recipes &rarr;
+          View all recipes <span aria-hidden>&rarr;</span>
         </Link>
       </div>
     </section>

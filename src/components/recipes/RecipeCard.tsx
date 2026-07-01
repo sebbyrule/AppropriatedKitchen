@@ -1,36 +1,36 @@
 import Link from "next/link";
-import { Clock, ChefHat } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import { Clock } from "lucide-react";
+import { DishPlaceholder } from "@/components/shared/DishPlaceholder";
 import type { Recipe } from "@/types/recipe";
 
 export function RecipeCard({ recipe }: { recipe: Recipe }) {
   return (
-    <Link href={`/recipes/${recipe.slug}`}>
-      <Card className="group h-full overflow-hidden transition-shadow hover:shadow-lg">
-        {/* Image placeholder — swap with next/image once real images exist */}
-        <div className="aspect-[4/3] bg-gradient-to-br from-primary/10 to-accent/10 flex items-center justify-center">
-          <ChefHat className="h-12 w-12 text-muted-foreground/40" />
+    <Link href={`/recipes/${recipe.slug}`} className="group">
+      <article className="flex h-full flex-col">
+        <DishPlaceholder className="aspect-[4/3] w-full" />
+
+        <div className="mt-5 flex items-center gap-3 text-xs uppercase tracking-[0.18em] text-muted-foreground">
+          <span className="inline-flex items-center gap-1.5">
+            <Clock className="h-3 w-3" />
+            {recipe.prepTime}
+          </span>
+          <span aria-hidden className="text-border">/</span>
+          <span>{recipe.difficulty}</span>
         </div>
-        <CardContent className="p-5">
-          <div className="flex items-center gap-2 mb-2">
-            <Clock className="h-4 w-4 text-muted-foreground" />
-            <span className="text-sm text-muted-foreground">{recipe.prepTime} prep</span>
-          </div>
-          <h3 className="text-lg font-semibold group-hover:text-primary transition-colors">
-            {recipe.title}
-          </h3>
-          <p className="mt-2 text-sm text-muted-foreground line-clamp-2">{recipe.excerpt}</p>
-        </CardContent>
-        <CardFooter className="px-5 pb-5 pt-0 flex flex-wrap gap-2">
-          <Badge variant="secondary">{recipe.difficulty}</Badge>
-          {recipe.tags.slice(0, 2).map((tag) => (
-            <Badge key={tag} variant="outline">
-              {tag}
-            </Badge>
+
+        <h3 className="mt-3 font-serif text-2xl font-normal leading-snug transition-colors group-hover:text-primary">
+          {recipe.title}
+        </h3>
+        <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-muted-foreground">
+          {recipe.excerpt}
+        </p>
+
+        <div className="mt-4 flex flex-wrap gap-x-3 gap-y-1 text-[0.7rem] uppercase tracking-[0.16em] text-muted-foreground/80">
+          {recipe.tags.slice(0, 3).map((tag) => (
+            <span key={tag}>{tag}</span>
           ))}
-        </CardFooter>
-      </Card>
+        </div>
+      </article>
     </Link>
   );
 }

@@ -2,7 +2,7 @@
  * Nutrition module — uses the local ingredient database.
  *
  * No API keys needed. Calculates nutrition from ingredient strings
- * using a built-in database of 150+ common cooking ingredients.
+ * using a built-in database of 440+ common cooking ingredients.
  *
  * For best results, use the CLI tool to generate frontmatter:
  *   npx tsx scripts/nutrition-calc.ts --servings 4 "2 cups flour, 1 tbsp oil"

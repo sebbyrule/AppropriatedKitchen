@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 import type { Nutrition } from "@/types/recipe";
 
@@ -14,27 +15,34 @@ const nutrientLabels: { key: keyof Nutrition; label: string; unit: string }[] = 
 export function NutritionPanel({
   nutrition,
   className,
+  label = "Per serving",
+  action,
 }: {
   nutrition: Nutrition;
   className?: string;
+  /** Caption under the heading (e.g. "Per serving" / "Whole recipe · 6 servings"). */
+  label?: string;
+  /** Optional control rendered beside the heading (e.g. a per-serving toggle). */
+  action?: ReactNode;
 }) {
   return (
-    <div className={cn("rounded-xl border bg-card p-6", className)}>
-      <h2 className="text-2xl font-bold font-serif mb-4">Nutrition</h2>
-      <p className="text-xs text-muted-foreground mb-4">Per serving</p>
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+    <div className={cn("border border-border bg-card p-6", className)}>
+      <div className="flex items-center justify-between gap-3">
+        <h2 className="font-serif text-2xl font-normal">Nutrition</h2>
+        {action}
+      </div>
+      <p className="eyebrow mt-2">{label}</p>
+      <div className="mt-5 grid grid-cols-2 gap-px overflow-hidden border border-border bg-border sm:grid-cols-3">
         {nutrientLabels
           .filter((n) => nutrition[n.key] !== undefined && nutrition[n.key] !== null)
           .map((n) => (
-            <div
-              key={n.key}
-              className="rounded-lg bg-muted/50 p-3 text-center"
-            >
-              <div className="text-lg font-bold">
+            <div key={n.key} className="min-w-0 bg-card p-4 text-center">
+              <div className="font-serif text-xl font-light tabular-nums whitespace-nowrap">
                 {nutrition[n.key]}
-                {n.key === "calories" ? "" : ""}
               </div>
-              <div className="text-xs text-muted-foreground">{n.label}</div>
+              <div className="mt-1 text-[0.65rem] uppercase tracking-[0.14em] text-muted-foreground">
+                {n.label}
+              </div>
             </div>
           ))}
       </div>

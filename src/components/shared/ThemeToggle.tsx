@@ -6,9 +6,9 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 function getInitialTheme(): boolean {
-  if (typeof document === "undefined") return false;
-  const stored = localStorage.getItem("theme");
-  return stored === "dark" || (!stored && window.matchMedia("(prefers-color-scheme: dark)").matches);
+  if (typeof document === "undefined") return true; // dark-first
+  // Matches the inline boot script: dark unless an explicit 'light' choice exists.
+  return localStorage.getItem("theme") !== "light";
 }
 
 export function ThemeToggle({ className }: { className?: string }) {
