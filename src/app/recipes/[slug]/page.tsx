@@ -2,11 +2,12 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { Separator } from "@/components/ui/separator";
 import { RecipeHeader } from "@/components/recipes/RecipeHeader";
-import { IngredientList } from "@/components/recipes/IngredientList";
 import { InstructionSteps } from "@/components/recipes/InstructionSteps";
-import { NutritionPanel } from "@/components/recipes/NutritionPanel";
+import { RecipeWorkspace } from "@/components/recipes/RecipeWorkspace";
+import { CookMode } from "@/components/recipes/CookMode";
 import { PrintableRecipe } from "@/components/recipes/PrintableRecipe";
 import { getRecipeBySlug, getAllRecipes } from "@/lib/recipes";
+import { buildRecipeJsonLd } from "@/lib/recipe-jsonld";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -39,21 +40,34 @@ export default async function RecipePage({ params }: Props) {
   const recipe = getRecipeBySlug(slug);
   if (!recipe) notFound();
 
+  const jsonLd = buildRecipeJsonLd(recipe);
+
   return (
     <div className="mx-auto max-w-4xl px-4 py-12 sm:px-6 lg:px-8">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+
       <RecipeHeader recipe={recipe} />
+
+      <div className="mt-6 flex justify-end">
+        <CookMode
+          title={recipe.title}
+          ingredients={recipe.ingredients}
+          content={recipe.content}
+        />
+      </div>
 
       <Separator className="my-8" />
 
-      <div className="grid gap-10 md:grid-cols-[1fr_280px]">
-        <div className="space-y-10">
-          <IngredientList ingredients={recipe.ingredients} />
-          <InstructionSteps content={recipe.content} />
-        </div>
-        <aside className="md:sticky md:top-24 self-start">
-          <NutritionPanel nutrition={recipe.nutrition} />
-        </aside>
-      </div>
+      <RecipeWorkspace
+        ingredients={recipe.ingredients}
+        nutrition={recipe.nutrition}
+        baseServings={recipe.servings}
+      >
+        <InstructionSteps content={recipe.content} />
+      </RecipeWorkspace>
 
       {/* Printable version (hidden in normal view) */}
       <PrintableRecipe recipe={recipe} />

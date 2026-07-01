@@ -8,20 +8,25 @@ export const metadata: Metadata = {
 
 export default function NotFound() {
   return (
-    <div className="mx-auto flex max-w-xl flex-1 flex-col items-center justify-center px-4 py-24 text-center">
-      <h1 className="text-8xl font-bold font-serif bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-        404
+    <div className="mx-auto flex max-w-xl flex-1 flex-col items-center justify-center px-4 py-32 text-center">
+      <p className="eyebrow">Off the Menu</p>
+      <h1 className="mt-4 font-serif text-[clamp(5rem,18vw,9rem)] font-light leading-none">
+        4<span className="text-primary">0</span>4
       </h1>
-      <h2 className="mt-6 text-2xl font-semibold">Page not found</h2>
-      <p className="mt-2 text-muted-foreground">
+      <h2 className="mt-6 font-serif text-2xl font-light">Page not found</h2>
+      <p className="mt-3 text-muted-foreground">
         Looks like this recipe didn&apos;t make it into the cookbook.
       </p>
-      <div className="mt-8 flex gap-4">
-        <Link href="/">
-          <Button>Go Home</Button>
-        </Link>
-        <Link href="/recipes">
-          <Button variant="outline">Browse Recipes</Button>
+      <div className="mt-10 flex flex-wrap items-center justify-center gap-6">
+        <Button nativeButton={false} render={<Link href="/" />}>Go Home</Button>
+        <Link
+          href="/recipes"
+          className="group inline-flex items-center gap-2 text-sm font-medium uppercase tracking-[0.18em] text-foreground transition-colors hover:text-primary"
+        >
+          Browse Recipes
+          <span className="transition-transform duration-300 group-hover:translate-x-1">
+            &rarr;
+          </span>
         </Link>
       </div>
     </div>

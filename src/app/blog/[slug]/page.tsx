@@ -36,31 +36,32 @@ export default async function BlogPostPage({ params }: Props) {
   if (!post) notFound();
 
   return (
-    <article className="mx-auto max-w-3xl px-4 py-12 sm:px-6 lg:px-8">
-      <header className="mb-10 space-y-4">
-        <h1 className="text-4xl font-bold font-serif sm:text-5xl">{post.title}</h1>
-        <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
-          <span className="flex items-center gap-1">
-            <CalendarDays className="h-4 w-4" />
+    <article className="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8">
+      <header className="mb-12 space-y-5">
+        <p className="eyebrow">Field Notes</p>
+        <h1 className="font-serif text-4xl font-light leading-[1.08] sm:text-5xl">
+          {post.title}
+        </h1>
+        <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-xs uppercase tracking-[0.16em] text-muted-foreground">
+          <span className="flex items-center gap-1.5">
+            <CalendarDays className="h-3.5 w-3.5" />
             {formatDate(post.date)}
           </span>
-          <span className="flex items-center gap-1">
-            <Clock className="h-4 w-4" />
+          <span className="flex items-center gap-1.5">
+            <Clock className="h-3.5 w-3.5" />
             {post.readingTime}
           </span>
           {post.tags && post.tags.length > 0 && (
-            <span className="flex flex-wrap gap-2">
+            <span className="flex flex-wrap gap-3">
               {post.tags.map((tag) => (
-                <span
-                  key={tag}
-                  className="text-xs px-2 py-0.5 rounded-full bg-muted text-muted-foreground"
-                >
+                <span key={tag} className="text-primary/80">
                   {tag}
                 </span>
               ))}
             </span>
           )}
         </div>
+        <div className="rule rule-accent !mt-8" />
       </header>
 
       <BlogContent content={post.content} />

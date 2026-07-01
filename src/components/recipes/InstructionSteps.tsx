@@ -10,9 +10,12 @@ export function InstructionSteps({
   className?: string;
 }) {
   return (
-    <div className={cn("space-y-4", className)}>
-      <h2 className="text-2xl font-bold font-serif">Instructions</h2>
-      <div className="prose prose-slate dark:prose-invert max-w-none prose-headings:font-serif prose-headings:text-xl prose-headings:mt-8 prose-headings:mb-3 prose-li:marker:text-primary">
+    <div className={cn("space-y-5", className)}>
+      <div>
+        <p className="eyebrow">Method</p>
+        <h2 className="mt-2 font-serif text-2xl font-normal">Instructions</h2>
+      </div>
+      <div className="prose prose-neutral dark:prose-invert max-w-none border-t border-border pt-4 prose-headings:font-serif prose-headings:font-normal prose-headings:text-xl prose-headings:mt-8 prose-headings:mb-3 prose-li:marker:text-primary">
         <ReactMarkdown remarkPlugins={[remarkGfm]}>{content}</ReactMarkdown>
       </div>
     </div>

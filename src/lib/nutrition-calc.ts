@@ -6,6 +6,7 @@
  */
 
 import { lookupIngredient } from "@/lib/nutrition-db";
+import { resolveDensity } from "@/lib/ingredient-density";
 
 // ───── Volume-to-weight conversions (g per mL) ─────
 // These are defaults when the ingredient doesn't have a specific density
@@ -84,27 +85,25 @@ function parseIngredientString(raw: string): ParsedIngredient {
 function estimateWeight(name: string, amount: number, unit: string): ParsedIngredient {
   const lookup = lookupIngredient(name);
   const entry = lookup?.entry;
+  const density = resolveDensity(name, entry?.density) ?? DEFAULT_DENSITY;
 
   let weightGrams = 0;
 
   switch (unit) {
     case "cup":
     case "cups": {
-      const density = entry?.density ?? DEFAULT_DENSITY;
       weightGrams = amount * CUP_ML * density;
       break;
     }
     case "tbsp":
     case "tablespoon":
     case "tablespoons": {
-      const density = entry?.density ?? DEFAULT_DENSITY;
       weightGrams = amount * TABLESPOON_ML * density;
       break;
     }
     case "tsp":
     case "teaspoon":
     case "teaspoons": {
-      const density = entry?.density ?? DEFAULT_DENSITY;
       weightGrams = amount * TEASPOON_ML * density;
       break;
     }
@@ -134,7 +133,6 @@ function estimateWeight(name: string, amount: number, unit: string): ParsedIngre
     case "ml":
     case "milliliter":
     case "milliliters": {
-      const density = entry?.density ?? DEFAULT_DENSITY;
       weightGrams = amount * density;
       break;
     }
@@ -272,7 +270,9 @@ export function calculateNutrition(
       hasFiber = true;
     }
     if (n.sodium !== undefined) {
-      totalSodium += (n.sodium * factor) / 1000; // Convert mg to g
+      // DB stores sodium in grams per 100g (like every other nutrient), so no
+      // extra mg→g conversion here — just scale by weight.
+      totalSodium += n.sodium * factor;
       hasSodium = true;
     }
     if (n.sugar !== undefined) {

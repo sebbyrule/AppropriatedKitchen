@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { SocialLinks } from "@/components/shared/SocialLinks";
+import { DishPlaceholder } from "@/components/shared/DishPlaceholder";
 import { SITE_NAME, SITE_TAGLINE } from "@/lib/constants";
 
 export const metadata: Metadata = {
@@ -9,13 +10,18 @@ export const metadata: Metadata = {
 
 export default function AboutPage() {
   return (
-    <div className="mx-auto max-w-3xl px-4 py-12 sm:px-6 lg:px-8">
-      <h1 className="text-4xl font-bold font-serif sm:text-5xl mb-8">About {SITE_NAME}</h1>
+    <div className="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8">
+      <p className="eyebrow">About</p>
+      <h1 className="mt-4 mb-3 font-serif text-4xl font-light leading-[1.05] sm:text-6xl">
+        {SITE_NAME}
+      </h1>
+      <p className="mb-10 font-serif text-xl font-light italic text-muted-foreground">
+        {SITE_TAGLINE}
+      </p>
+      <div className="mb-12 rule rule-accent" />
 
-      <div className="prose prose-slate dark:prose-invert max-w-none prose-lg prose-headings:font-serif">
-        <div className="aspect-[2/1] rounded-xl bg-gradient-to-br from-primary/10 to-accent/10 flex items-center justify-center mb-8">
-          <span className="text-6xl">🍳</span>
-        </div>
+      <div className="prose prose-neutral dark:prose-invert max-w-none prose-lg prose-headings:font-serif prose-headings:font-normal prose-a:text-primary prose-a:no-underline hover:prose-a:underline">
+        <DishPlaceholder className="not-prose mb-10 aspect-[2/1] w-full" />
 
         <h2>Your Food, My Way</h2>
 
